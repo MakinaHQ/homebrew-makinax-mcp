@@ -6,12 +6,12 @@
 # this file sat at 0.1.0-rc.1 against a 0.4.0 codebase.
 class MakinaxMcp < Formula
   desc "Mandate-governed MCP server for Makina-Lite machines (read-write build)"
-  homepage "https://github.com/MakinaHQ/homebrew-makinax"
-  version "0.5.0"
+  homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
+  version "0.5.1"
 
   if OS.mac? && Hardware::CPU.arm?
-    url "https://github.com/MakinaHQ/homebrew-makinax/releases/download/v#{version}/makinax-mcp-aarch64-apple-darwin.tar.xz"
-    sha256 "c4ba69c97d3c3ab739a980920b0fcaad7d876f3187c595b01691e938e9fb900d" # filled by sync-tap.sh from the release's SHA256SUMS
+    url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-aarch64-apple-darwin.tar.xz"
+    sha256 "72318def387ab8546c2fb94c03485fb6039da4f1d55feae0c5a663fe346378a9" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp-readonly",
@@ -29,7 +29,7 @@ class MakinaxMcp < Formula
       the independent loss circuit breaker (separate guardian key; run it on
       a different host when you can). Start with the onboarding skill in the
       repo (skills/makina-onboarding). Reporting-only? Install
-      makinahq/tap/makinax-mcp-readonly instead.
+      makinahq/makinax-mcp/makinax-mcp-readonly instead.
     EOS
   end
 
