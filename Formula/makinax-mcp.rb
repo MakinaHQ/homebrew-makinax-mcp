@@ -7,11 +7,11 @@
 class MakinaxMcp < Formula
   desc "Mandate-governed MCP server for Makina-Lite machines (read-write build)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.5.1"
+  version "0.5.2-rc.1"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-aarch64-apple-darwin.tar.xz"
-    sha256 "72318def387ab8546c2fb94c03485fb6039da4f1d55feae0c5a663fe346378a9" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "a8ec8280070862f8e8c4a3fde23111a848177dad9ba6eb03d3fa197a720a278d" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp-readonly",
@@ -20,6 +20,11 @@ class MakinaxMcp < Formula
   def install
     bin.install "makinax-mcp"
     bin.install "makinax-watchdog"
+    # The files the product points at, installed so those pointers resolve.
+    # `example.config.toml` is cited by the config `init` writes, the skills
+    # by these caveats, `watchdog.example.toml` by the onboarding skill.
+    # Without them the references lead into a private repo.
+    pkgshare.install Dir["share/*"]
   end
 
   def caveats
@@ -27,9 +32,20 @@ class MakinaxMcp < Formula
       Write build: execution requires a signer, a mandate, and foundry (anvil)
       for pre-execution fork simulation. Also installs makinax-watchdog —
       the independent loss circuit breaker (separate guardian key; run it on
-      a different host when you can). Start with the onboarding skill in the
-      repo (skills/makina-onboarding). Reporting-only? Install
-      makinahq/makinax-mcp/makinax-mcp-readonly instead.
+      a different host when you can).
+
+      Start here:
+        makinax-mcp init          # writes ~/.config/makinax/config.toml
+        #{opt_pkgshare}/skills/makina-onboarding/SKILL.md
+        #{opt_pkgshare}/example.config.toml     # every option, annotated
+        #{opt_pkgshare}/watchdog.example.toml   # circuit-breaker config
+
+      A newly provisioned Safe has NO instruction root, and that is normal —
+      one cannot exist before you compose it. The Kit boots "unrooted" and
+      offers the path out: install a package, compose_root, then the Safe
+      OWNER signs setAllowedInstrRoot.
+
+      Reporting-only? Install makinahq/makinax-mcp/makinax-mcp-readonly.
     EOS
   end
 

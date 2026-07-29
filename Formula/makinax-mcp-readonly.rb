@@ -7,11 +7,11 @@
 class MakinaxMcpReadonly < Formula
   desc "Reporting-only MCP server for Makina-Lite machines (no signing capability compiled in)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.5.1"
+  version "0.5.2-rc.1"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-readonly-aarch64-apple-darwin.tar.xz"
-    sha256 "306accf528152ea9ee91820450fd4df494960576dbab50c852b3566cb08ceb6e" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "65948219685a39ab87cacd1b95e5158a7c496fd0e07bd8e7f2fe401f8e5859b0" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp",
@@ -19,13 +19,24 @@ class MakinaxMcpReadonly < Formula
 
   def install
     bin.install "makinax-mcp"
+    # The files the product points at, installed so those pointers resolve
+    # rather than leading into a private repo.
+    pkgshare.install Dir["share/*"]
   end
 
   def caveats
     <<~EOS
       Read-only build: strictly reporting — no signing capability is compiled
       in, and the server refuses to start if key material is configured.
-      Setup: skills/makina-portfolio in the repo (config bootstrap section).
+
+      Start here:
+        makinax-mcp init          # writes ~/.config/makinax/config.toml
+        #{opt_pkgshare}/skills/makina-portfolio/SKILL.md
+        #{opt_pkgshare}/example.config.toml     # every option, annotated
+
+      Set `operator_address` in your [safes.<name>] block — read-only builds
+      have no signer to derive it from, and position valuation is
+      operator-gated on-chain.
     EOS
   end
 
