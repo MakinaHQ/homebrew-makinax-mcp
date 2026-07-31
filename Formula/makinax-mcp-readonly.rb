@@ -11,7 +11,7 @@ class MakinaxMcpReadonly < Formula
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-readonly-aarch64-apple-darwin.tar.xz"
-    sha256 "8d0e5d0035743ddfac0182dc84e586984ca628b28849637d33773aa659d5b937" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "41a774cad882767a6f5bfec87756e78ad9a476b86d8a9adc31ae9219f15f1e41" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp",
