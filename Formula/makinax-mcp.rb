@@ -7,11 +7,11 @@
 class MakinaxMcp < Formula
   desc "Mandate-governed MCP server for Makina-Lite machines (read-write build)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.5.2-rc.2"
+  version "0.5.2-rc.3"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-aarch64-apple-darwin.tar.xz"
-    sha256 "2d52bc74d0f5583c4f1c1e75b44e17d59e964e91c7dff43c86e41a8abf8548ef" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "b915bcdf230c4fbbe5a90445a7bf6d2ad6ea4aac60f209bd134a0c5e8e99104d" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp-readonly",
@@ -38,6 +38,7 @@ class MakinaxMcp < Formula
         makinax-mcp init          # writes ~/.config/makinax/config.toml
         #{opt_pkgshare}/skills/makina-onboarding/SKILL.md
         #{opt_pkgshare}/example.config.toml     # every option, annotated
+        #{opt_pkgshare}/package-manifest-schema.md  # the manifest contract
         #{opt_pkgshare}/watchdog.example.toml   # circuit-breaker config
 
       A newly provisioned Safe has NO instruction root, and that is normal —

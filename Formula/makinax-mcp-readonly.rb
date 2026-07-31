@@ -7,11 +7,11 @@
 class MakinaxMcpReadonly < Formula
   desc "Reporting-only MCP server for Makina-Lite machines (no signing capability compiled in)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.5.2-rc.2"
+  version "0.5.2-rc.3"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-readonly-aarch64-apple-darwin.tar.xz"
-    sha256 "244642b48a59f2dc49f7f62d55a1a743c713e985ea6a63bee86d41bf3ad6730a" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "8d0e5d0035743ddfac0182dc84e586984ca628b28849637d33773aa659d5b937" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp",
@@ -33,6 +33,7 @@ class MakinaxMcpReadonly < Formula
         makinax-mcp init          # writes ~/.config/makinax/config.toml
         #{opt_pkgshare}/skills/makina-portfolio/SKILL.md
         #{opt_pkgshare}/example.config.toml     # every option, annotated
+        #{opt_pkgshare}/package-manifest-schema.md  # the manifest contract
 
       Set `operator_address` in your [safes.<name>] block — read-only builds
       have no signer to derive it from, and position valuation is
