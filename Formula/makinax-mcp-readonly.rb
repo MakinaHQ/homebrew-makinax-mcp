@@ -7,11 +7,11 @@
 class MakinaxMcpReadonly < Formula
   desc "Reporting-only MCP server for Makina-Lite machines (no signing capability compiled in)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.5.2-rc.9"
+  version "0.5.2-rc.10"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-readonly-aarch64-apple-darwin.tar.xz"
-    sha256 "28acbfcb5fb32b722b78a5703be7d1d44d6158cef4e2478ba50bc94e40208bc1" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "93fc33d4006e0be8e3e4997435a7fb9956a3dc0c73c92d9ad88e4129766b7eb0" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp",
