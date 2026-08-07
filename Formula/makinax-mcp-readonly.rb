@@ -7,11 +7,11 @@
 class MakinaxMcpReadonly < Formula
   desc "Reporting-only MCP server for Makina-Lite machines (no signing capability compiled in)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.5.2-rc.23"
+  version "0.5.2-rc.24"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-readonly-aarch64-apple-darwin.tar.xz"
-    sha256 "ed7089f816e874c748e4c55cf1b0b520e7461fedc69ac038e50c6e074c5b61b0" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "36b03c6454461a7e0376a178c5fa11dd9134fccb70cac8a354c526c87404a1d9" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp",
@@ -19,6 +19,10 @@ class MakinaxMcpReadonly < Formula
 
   def install
     bin.install "makinax-mcp"
+    # `makinax` is the CLI name a person types (`makinax onboard`,
+    # `makinax <tool>`); `makinax-mcp` is what an MCP host launches. One
+    # binary — dispatch does not depend on argv[0]. See `makinax --help`.
+    bin.install_symlink bin/"makinax-mcp" => "makinax"
     # The files the product points at, installed so those pointers resolve
     # rather than leading into a private repo.
     pkgshare.install Dir["share/*"]
@@ -30,10 +34,19 @@ class MakinaxMcpReadonly < Formula
       in, and the server refuses to start if key material is configured.
 
       Start here:
-        makinax-mcp init          # writes ~/.config/makinax/config.toml
+        makinax onboard     # where you are and what remains — resumable; with
+                            # no config yet it says exactly what to run first
+        makinax --help      # every command, incl. `makinax <tool> [--args…]`
+
+      References:
         #{opt_pkgshare}/skills/makina-portfolio/SKILL.md
         #{opt_pkgshare}/example.config.toml     # every option, annotated
         #{opt_pkgshare}/package-manifest-schema.md  # the manifest contract
+
+      After `brew upgrade`: restart/reconnect your MCP host — a running
+      server keeps serving the OLD build until it is restarted. Check the
+      runtime build with server_info (version+sha) against
+      `makinax --version`.
 
       Set `operator_address` in your [safes.<name>] block — read-only builds
       have no signer to derive it from, and position valuation is
@@ -43,5 +56,6 @@ class MakinaxMcpReadonly < Formula
 
   test do
     assert_match "[read-only]", shell_output("#{bin}/makinax-mcp --version")
+    assert_match "makinax onboard", shell_output("#{bin}/makinax --help")
   end
 end

@@ -7,11 +7,11 @@
 class MakinaxMcp < Formula
   desc "Mandate-governed MCP server for Makina-Lite machines (read-write build)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.5.2-rc.23"
+  version "0.5.2-rc.24"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-aarch64-apple-darwin.tar.xz"
-    sha256 "70b56c0ab5ead080252c8ba6a960044b6fe7eda30a00e5ebb7b5234de3866a66" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "aa217ea63fc5266e1476da40d9a648e2c613af4d72646bf9706059129676a509" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp-readonly",
@@ -20,6 +20,10 @@ class MakinaxMcp < Formula
   def install
     bin.install "makinax-mcp"
     bin.install "makinax-watchdog"
+    # `makinax` is the CLI name a person types (`makinax onboard`,
+    # `makinax <tool>`); `makinax-mcp` is what an MCP host launches. One
+    # binary — dispatch does not depend on argv[0]. See `makinax --help`.
+    bin.install_symlink bin/"makinax-mcp" => "makinax"
     # The files the product points at, installed so those pointers resolve.
     # `example.config.toml` is cited by the config `init` writes, the skills
     # by these caveats, `watchdog.example.toml` by the onboarding skill.
@@ -35,11 +39,21 @@ class MakinaxMcp < Formula
       a different host when you can).
 
       Start here:
-        makinax-mcp init          # writes ~/.config/makinax/config.toml
+        makinax onboard     # where you are, who must act, and the next action —
+                            # resumable; with no config yet it says exactly what
+                            # to run first (`makinax init`)
+        makinax --help      # every command, incl. `makinax <tool> [--args…]`
+
+      References:
         #{opt_pkgshare}/skills/makina-onboarding/SKILL.md
         #{opt_pkgshare}/example.config.toml     # every option, annotated
         #{opt_pkgshare}/package-manifest-schema.md  # the manifest contract
         #{opt_pkgshare}/watchdog.example.toml   # circuit-breaker config
+
+      After `brew upgrade`: restart/reconnect your MCP host — a running
+      server keeps serving the OLD build until it is restarted. Check the
+      runtime build with server_info (version+sha) against
+      `makinax --version`.
 
       A newly provisioned Safe has NO instruction root, and that is normal —
       one cannot exist before you compose it. The Kit boots "unrooted" and
@@ -52,5 +66,7 @@ class MakinaxMcp < Formula
 
   test do
     assert_match "[read-write]", shell_output("#{bin}/makinax-mcp --version")
+    # The documented entry point exists under the documented name.
+    assert_match "makinax onboard", shell_output("#{bin}/makinax --help")
   end
 end
