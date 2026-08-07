@@ -7,11 +7,11 @@
 class MakinaxMcpReadonly < Formula
   desc "Reporting-only MCP server for Makina-Lite machines (no signing capability compiled in)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.5.2-rc.25"
+  version "0.5.2-rc.26"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-readonly-aarch64-apple-darwin.tar.xz"
-    sha256 "3809f8d3ea8fa9ddefaaabce189837f3b1670415e8cda343b6fc019519937854" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "caa5f5a3e30311a32b40a5e78e56d806a8cd808b73abcb78c6dad7daabe0c315" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp",
@@ -34,8 +34,8 @@ class MakinaxMcpReadonly < Formula
       in, and the server refuses to start if key material is configured.
 
       Start here:
-        makinax onboard     # where you are and what remains — resumable; with
-                            # no config yet it says exactly what to run first
+        makinax onboard     # where you are and what remains — resumable; on
+                            # first run it asks for your Safe and writes the config
         makinax --help      # every command, incl. `makinax <tool> [--args…]`
 
       References:

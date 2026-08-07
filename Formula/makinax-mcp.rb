@@ -7,11 +7,11 @@
 class MakinaxMcp < Formula
   desc "Mandate-governed MCP server for Makina-Lite machines (read-write build)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.5.2-rc.25"
+  version "0.5.2-rc.26"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-aarch64-apple-darwin.tar.xz"
-    sha256 "bd72ba86f2e09807b07ff9839a03a0b7c227c3a34dc8d3d8b5fb46d98a12c4e4" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "9b027adb6fd2e6651932a71eb4f8f6ad1becc5a4b456bd5ce00f61827e9dad69" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp-readonly",
@@ -40,8 +40,8 @@ class MakinaxMcp < Formula
 
       Start here:
         makinax onboard     # where you are, who must act, and the next action —
-                            # resumable; with no config yet it says exactly what
-                            # to run first (`makinax init`)
+                            # resumable; on first run it asks for your Safe and
+                            # chain and writes the config itself
         makinax --help      # every command, incl. `makinax <tool> [--args…]`
 
       References:
