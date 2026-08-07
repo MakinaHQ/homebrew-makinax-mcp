@@ -7,11 +7,11 @@
 class MakinaxMcp < Formula
   desc "Mandate-governed MCP server for Makina-Lite machines (read-write build)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.5.2-rc.24"
+  version "0.5.2-rc.25"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-aarch64-apple-darwin.tar.xz"
-    sha256 "aa217ea63fc5266e1476da40d9a648e2c613af4d72646bf9706059129676a509" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "bd72ba86f2e09807b07ff9839a03a0b7c227c3a34dc8d3d8b5fb46d98a12c4e4" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp-readonly",
@@ -51,9 +51,9 @@ class MakinaxMcp < Formula
         #{opt_pkgshare}/watchdog.example.toml   # circuit-breaker config
 
       After `brew upgrade`: restart/reconnect your MCP host — a running
-      server keeps serving the OLD build until it is restarted. Check the
-      runtime build with server_info (version+sha) against
-      `makinax --version`.
+      server keeps serving the OLD build until it is restarted. To catch a
+      stale server, compare the health_check tool's `version` (the RUNNING
+      image) against `makinax --version` (what is on disk).
 
       A newly provisioned Safe has NO instruction root, and that is normal —
       one cannot exist before you compose it. The Kit boots "unrooted" and
