@@ -7,15 +7,22 @@
 class MakinaxMcp < Formula
   desc "Mandate-governed MCP server for Makina-Lite machines (read-write build)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.5.2-rc.28"
+  version "0.5.2-rc.29"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-aarch64-apple-darwin.tar.xz"
-    sha256 "46b2bf1c87a0b026114ca365a9a2d0315100e5993febce537bf9689ba2a55bea" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "ea0694d3d22981f13e12dc3540facd52ded5e6c5d224469c2ef19da7609181e5" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp-readonly",
     because: "both install a binary named `makinax-mcp`"
+
+  # Hard runtime dependency: the documented bootstrap (compose_root ->
+  # ensure_integrations) shells out to `git clone/fetch/checkout` for the
+  # pinned makina-integrations ref. On a fresh Mac with no Xcode CLT the
+  # bare `git` stub pops a GUI installer mid-tool-call; declaring it here
+  # makes brew install a real one up front.
+  depends_on "git"
 
   def install
     bin.install "makinax-mcp"
