@@ -7,11 +7,11 @@
 class MakinaxMcpReadonly < Formula
   desc "Reporting-only MCP server for Makina-Lite machines (no signing capability compiled in)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.5.2-rc.29"
+  version "0.6.0"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-readonly-aarch64-apple-darwin.tar.xz"
-    sha256 "c310c6e88272123327320b419a56ebc492ffbcedcc14d067455248618e69f745" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "e69fd9bf8f71843c3818970c48aad9caee99f37e8c3aac5c87835fb0ab0d6d2c" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp",
@@ -25,7 +25,11 @@ class MakinaxMcpReadonly < Formula
   depends_on "git"
 
   def install
-    bin.install "makinax-mcp"
+    # The artifact carries the DISTINCT name so `tar -tf` says which variant
+    # you have without executing it; the installed COMMAND is `makinax-mcp`
+    # for both variants, because that is what every skill, the README, and
+    # MCP host configs invoke.
+    bin.install "makinax-mcp-readonly" => "makinax-mcp"
     # `makinax` is the CLI name a person types (`makinax onboard`,
     # `makinax <tool>`); `makinax-mcp` is what an MCP host launches. One
     # binary — dispatch does not depend on argv[0]. See `makinax --help`.
