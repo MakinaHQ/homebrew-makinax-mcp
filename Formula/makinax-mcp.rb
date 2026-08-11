@@ -7,11 +7,11 @@
 class MakinaxMcp < Formula
   desc "Mandate-governed MCP server for Makina-Lite machines (read-write build)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.6.0"
+  version "0.6.1"
 
   if OS.mac? && Hardware::CPU.arm?
     url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-aarch64-apple-darwin.tar.xz"
-    sha256 "030c73e1a204edc87d9fe74653fc06d1ad30ef960317eb30e4cee105607ccf2e" # filled by sync-tap.sh from the release's SHA256SUMS
+    sha256 "be8af6f611061f1e49e426dc847dbf2258945217e96ca4a52c7bc6d8d75553a1" # filled by sync-tap.sh from the release's SHA256SUMS
   end
 
   conflicts_with "makinax-mcp-readonly",
