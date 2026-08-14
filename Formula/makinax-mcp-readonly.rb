@@ -9,10 +9,11 @@ class MakinaxMcpReadonly < Formula
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
   version "0.6.3"
 
-  if OS.mac? && Hardware::CPU.arm?
-    url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-readonly-aarch64-apple-darwin.tar.xz"
-    sha256 "68582e2f6073171488bd376affa61c327f51ef7f88e69614e2478665d8bd6fcf" # filled by sync-tap.sh from the release's SHA256SUMS
-  end
+  # url/sha256 are declared UNCONDITIONALLY (cc-156): inside a conditional,
+  # a platform question that cannot be evaluated leaves the formula with NO
+  # url at all, and `brew tap` refuses it with "requires at least a URL".
+  url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-readonly-aarch64-apple-darwin.tar.xz"
+  sha256 "68582e2f6073171488bd376affa61c327f51ef7f88e69614e2478665d8bd6fcf" # filled by sync-tap.sh from the release's SHA256SUMS
 
   conflicts_with "makinax-mcp",
     because: "both install a binary named `makinax-mcp`"
