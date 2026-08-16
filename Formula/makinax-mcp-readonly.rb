@@ -7,13 +7,32 @@
 class MakinaxMcpReadonly < Formula
   desc "Reporting-only MCP server for Makina-Lite machines (no signing capability compiled in)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.6.3"
+  version "0.6.4"
 
-  # url/sha256 are declared UNCONDITIONALLY (cc-156): inside a conditional,
-  # a platform question that cannot be evaluated leaves the formula with NO
-  # url at all, and `brew tap` refuses it with "requires at least a URL".
+  # url/sha256 are declared UNCONDITIONALLY. They used to sit inside
+  # `if OS.mac? && Hardware::CPU.arm?`, which meant that whenever that
+  # expression was false — or could not be EVALUATED — the formula had no url
+  # at all, and Homebrew rejected the FORMULA rather than the platform:
+  #
+  #     Error: makinahq/makinax-mcp/makinax-mcp: formula requires at least a URL
+  #
+  # A tester hit exactly that: their Homebrew could not parse macOS `26.2` and
+  # raised `MacOSVersion::Error` while evaluating the condition. Their broken
+  # brew was not our bug; turning it into an error that points at MakinaHQ's
+  # packaging was. `brew tap` was broken on the stable channel with every
+  # version field correct.
+  #
+  # A conditional may narrow or override what is served. It must never be the
+  # only place a url is declared.
   url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-readonly-aarch64-apple-darwin.tar.xz"
-  sha256 "68582e2f6073171488bd376affa61c327f51ef7f88e69614e2478665d8bd6fcf" # filled by sync-tap.sh from the release's SHA256SUMS
+  sha256 "7e0db4469f58373098b1249ea0ff45bc282aaf949e0e3816485e65a526bd8ad4" # filled by sync-tap.sh from the release's SHA256SUMS
+
+  # NOT ADDED HERE: the release also publishes x86_64 Linux assets, which no
+  # formula references. Adding them means teaching sync-tap.sh to fill a SECOND
+  # (url, sha256) pair from a different asset name, and widening that fill
+  # logic inside a fix that unblocks `brew tap` on the stable channel is the
+  # wrong risk to take — a mis-filled checksum fails as a corrupted download.
+  # Filed separately; the tap serves macOS today exactly as it did before.
 
   conflicts_with "makinax-mcp",
     because: "both install a binary named `makinax-mcp`"
@@ -25,7 +44,30 @@ class MakinaxMcpReadonly < Formula
   # makes brew install a real one up front.
   depends_on "git"
 
+  # Refuse a platform this tarball cannot run on — AT INSTALL TIME, and the
+  # timing is the whole design. See the long note in `makinax-mcp.rb`: cc-156
+  # removed a LOAD-time conditional because a condition that could not be
+  # evaluated left the formula with no url and broke `brew tap` itself; the
+  # cost was that `brew install` on Linux or Intel started succeeding and
+  # installing an unrunnable binary. A formula must LOAD everywhere and need
+  # only INSTALL where it works.
   def install
+    unless OS.mac? && Hardware::CPU.arm?
+      odie <<~EOS
+        makinax-mcp-readonly is packaged for macOS on Apple Silicon (arm64) only,
+        and this machine is not that. Refusing rather than installing a binary
+        that cannot run here.
+
+        Linux x86_64: the release publishes
+        `makinax-mcp-readonly-x86_64-unknown-linux-gnu.tar.xz`. Download and
+        unpack it directly — it needs glibc 2.39 or newer, so Ubuntu 22.04 and
+        Debian 12 will not run it.
+
+        Linux arm64 and Intel macOS: no build is published today.
+
+        Releases: https://github.com/MakinaHQ/homebrew-makinax-mcp/releases
+      EOS
+    end
     # The artifact carries the DISTINCT name so `tar -tf` says which variant
     # you have without executing it; the installed COMMAND is `makinax-mcp`
     # for both variants, because that is what every skill, the README, and
