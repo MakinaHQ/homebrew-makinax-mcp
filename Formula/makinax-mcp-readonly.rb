@@ -7,7 +7,7 @@
 class MakinaxMcpReadonly < Formula
   desc "Reporting-only MCP server for Makina-Lite machines (no signing capability compiled in)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.6.4"
+  version "0.7.0"
 
   # url/sha256 are declared UNCONDITIONALLY. They used to sit inside
   # `if OS.mac? && Hardware::CPU.arm?`, which meant that whenever that
@@ -25,7 +25,7 @@ class MakinaxMcpReadonly < Formula
   # A conditional may narrow or override what is served. It must never be the
   # only place a url is declared.
   url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-readonly-aarch64-apple-darwin.tar.xz"
-  sha256 "7e0db4469f58373098b1249ea0ff45bc282aaf949e0e3816485e65a526bd8ad4" # filled by sync-tap.sh from the release's SHA256SUMS
+  sha256 "51e86352c49b03bd449f699ccfef6051796c700285e10edfb67368d1090eac58" # filled by sync-tap.sh from the release's SHA256SUMS
 
   # NOT ADDED HERE: the release also publishes x86_64 Linux assets, which no
   # formula references. Adding them means teaching sync-tap.sh to fill a SECOND

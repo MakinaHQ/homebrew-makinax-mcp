@@ -7,7 +7,7 @@
 class MakinaxMcp < Formula
   desc "Mandate-governed MCP server for Makina-Lite machines (read-write build)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.6.4"
+  version "0.7.0"
 
   # url/sha256 are declared UNCONDITIONALLY. They used to sit inside
   # `if OS.mac? && Hardware::CPU.arm?`, which meant that whenever that
@@ -25,7 +25,7 @@ class MakinaxMcp < Formula
   # A conditional may narrow or override what is served. It must never be the
   # only place a url is declared.
   url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-aarch64-apple-darwin.tar.xz"
-  sha256 "4c61a36c275e0b17afe1d8189ac238cdbd68f69093324a507f48359d7108c3f5" # filled by sync-tap.sh from the release's SHA256SUMS
+  sha256 "d60495215bce7ad5a99830e823673d34f2aee4b323e806a98c530da76070db2f" # filled by sync-tap.sh from the release's SHA256SUMS
 
   # NOT ADDED HERE: the release also publishes x86_64 Linux assets, which no
   # formula references. Adding them means teaching sync-tap.sh to fill a SECOND
@@ -100,20 +100,30 @@ class MakinaxMcp < Formula
     # by these caveats, `watchdog.example.toml` by the onboarding skill.
     # Without them the references lead into a private repo.
     pkgshare.install Dir["share/*"]
+    bin.install_symlink pkgshare/"base-anvil/makinax-base-anvil" => "makinax-base-anvil"
   end
 
   def caveats
     <<~EOS
-      Write build: execution requires a signer, a mandate, and foundry (anvil)
-      for pre-execution fork simulation. Also installs makinax-watchdog —
+      Write build: Base simulation uses the bundled makinax-base-anvil.
+      Ethereum and HyperEVM still require stock foundry (anvil). Execution
+      requires a signer and a mandate. Also installs makinax-watchdog —
       the independent loss circuit breaker (separate guardian key; run it on
       a different host when you can).
 
       Start here:
-        makinax onboard     # where you are, who must act, and the next action —
-                            # resumable; on first run it asks for your Safe and
-                            # chain and writes the config itself
-        makinax --help      # every command, incl. `makinax <tool> [--args…]`
+        makinax --version   # verify [read-write]
+        makinax init        # initialize configuration
+        makinax onboard     # resume setup and choose wizard or chat
+
+      Register #{opt_bin}/makinax-mcp with your MCP host and connect it.
+      The connected process serves the owner page. Do not start a second
+      server. For CLI-only wizard use, run `makinax owner-serve` in your own
+      terminal and leave it in the foreground. It holds the state lock.
+      Obtain the page link with `makinax owner-url --wait` in your terminal;
+      open it locally and keep the bearer link out of chat and captured logs.
+      If host policy denies a command, use its approval flow or run the
+      supported command yourself; do not retry it through another tool.
 
       References:
         #{opt_pkgshare}/skills/makina-onboarding/SKILL.md
@@ -122,6 +132,7 @@ class MakinaxMcp < Formula
         #{opt_pkgshare}/watchdog.example.toml   # circuit-breaker config
 
       After `brew upgrade`: restart/reconnect your MCP host — a running
+      reload the bundled skills (refresh separately copied host skills). A
       server keeps serving the OLD build until it is restarted. To catch a
       stale server, compare the health_check tool's `version` (the RUNNING
       image) against `makinax --version` (what is on disk).
