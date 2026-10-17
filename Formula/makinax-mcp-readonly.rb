@@ -6,11 +6,11 @@
 class MakinaxMcpReadonly < Formula
   desc "MCP server for reading a makinaX module (no signing code compiled in)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.8.1"
+  version "0.8.2"
 
   # url/sha256 are declared unconditionally; see makinax-mcp.rb.
   url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-readonly-aarch64-apple-darwin.tar.xz"
-  sha256 "308c6e8c863169cfdcb67d6b7ff8105002da4b88943e68c8b517114e07e09ce3" # filled by sync-tap.sh from the release's SHA256SUMS
+  sha256 "5359c6ace6e3aa939de3c809ff4c14ffb866af18d6601ac5545028c770a95fac" # filled by sync-tap.sh from the release's SHA256SUMS
 
   conflicts_with "makinax-mcp",
     because: "both install a binary named `makinax-mcp`"
