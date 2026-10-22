@@ -6,14 +6,14 @@
 class MakinaxMcp < Formula
   desc "MCP server for operating a makinaX module (read-write build)"
   homepage "https://github.com/MakinaHQ/homebrew-makinax-mcp"
-  version "0.8.2"
+  version "0.8.3"
 
   # url/sha256 are declared unconditionally. A url declared only inside a
   # platform conditional leaves the formula with no url when that condition
   # cannot be evaluated, and Homebrew then rejects the formula itself, which
   # breaks `brew tap`. The platform check lives in `install` instead.
   url "https://github.com/MakinaHQ/homebrew-makinax-mcp/releases/download/v#{version}/makinax-mcp-aarch64-apple-darwin.tar.xz"
-  sha256 "1e34757de77e9f3a240a0346ecbba7f101de3b1fec4d35007cf6592ca8de96d0" # filled by sync-tap.sh from the release's SHA256SUMS
+  sha256 "6c0a44cfd33443d95c93970481dc7fcdd5ee6f970daaf413798e3f2750d58366" # filled by sync-tap.sh from the release's SHA256SUMS
 
   conflicts_with "makinax-mcp-readonly",
     because: "both install a binary named `makinax-mcp`"
